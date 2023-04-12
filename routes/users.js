@@ -48,7 +48,7 @@ userRouter.post("/", async (req, res) => {
 });
 
 // Route to get all users
-userRouter.get("/list", async (req, res) => {
+userRouter.get("/", async (req, res) => {
   try {
     let users = await User.find();
     res.status(200).json({
