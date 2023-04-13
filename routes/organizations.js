@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import Organization from "../models/Organization.js";
 import Queue from "../models/Queue.js";
 
@@ -27,25 +27,26 @@ organizationRouter.get("/", async (req, res) => {
   try {
     let organizations = await Organization.find();
 
-    // get all queues for each organization
+    // get all queues for this organization
     const queues = await Queue.find();
 
-    // add queues to each organization
     const new_organizations = organizations.map((organization) => {
-      const organizationQueues = queues.filter(
-        (queue) => queue.organization.toString() == organization._id.toString()
-      );
+      const organizationQueues = queues
+        .filter(
+          (queue) =>
+            queue.organization.toString() === organization._id.toString()
+        )
+        .map((queue) => queue.toObject());
+
       return {
-        ...organization._doc,
+        ...organization.toObject(),
         queues: organizationQueues,
       };
     });
 
-    console.log(new_organizations);
-
     res.status(200).json({
       status: 200,
-      data: organizations,
+      data: new_organizations,
     });
   } catch (err) {
     res.status(400).json({
