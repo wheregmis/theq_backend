@@ -36,6 +36,7 @@ organizationRouter.get("/", async (req, res) => {
           (queue) =>
             queue.organization.toString() === organization._id.toString()
         )
+        .sort((a, b) => a.joinedAt - b.joinedAt)
         .map((queue) => queue.toObject());
 
       return {

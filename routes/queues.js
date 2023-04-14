@@ -17,13 +17,13 @@ queueRouter.post("/", async (req, res) => {
       organization: req.body.organization,
     });
 
-    if (userInQueue) {
-      res.status(400).json({
-        status: 400,
-        message: "User already in queue",
-      });
-      return;
-    }
+    // if (userInQueue) {
+    //   res.status(400).json({
+    //     status: 400,
+    //     message: "User already in queue",
+    //   });
+    //   return;
+    // }
 
     console.log(currentQueueCount);
 
@@ -74,14 +74,17 @@ queueRouter.put("/swap/:queueId1/:queueId2", async (req, res) => {
     const queue1 = await Queue.findById(req.params.queueId1);
     const queue2 = await Queue.findById(req.params.queueId2);
 
-    if (!queue1 || !queue2 || queue1.organization !== queue2.organization) {
+    console.log(queue1.organization);
+    console.log(queue2.organization);
+
+    if (queue1?.organization.toString() != queue2?.organization.toString()) {
       throw new Error("Invalid swap request");
     }
 
     // Swap the positions
-    const tempPosition = queue1.position;
-    queue1.position = queue2.position;
-    queue2.position = tempPosition;
+    const tempPosition = queue1.joinedAt;
+    queue1.joinedAt = queue2.joinedAt;
+    queue2.joinedAt = tempPosition;
 
     await queue1.save();
     await queue2.save();

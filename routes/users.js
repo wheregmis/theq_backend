@@ -1,10 +1,11 @@
 import express from "express";
-import User from "../models/user.js";
+import User from "../models/User";
 
 const userRouter = express.Router();
 
 // route to login user
 userRouter.post("/login", async (req, res) => {
+  console.log(req.body);
   try {
     let user = await User.findOne({
       email: req.body.email,
