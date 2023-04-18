@@ -14,16 +14,15 @@ queueRouter.post("/", async (req, res) => {
     // checking if the user is already in the queue
     const userInQueue = await Queue.findOne({
       user: req.body.user,
-      organization: req.body.organization,
     });
 
-    // if (userInQueue) {
-    //   res.status(400).json({
-    //     status: 400,
-    //     message: "User already in queue",
-    //   });
-    //   return;
-    // }
+    if (userInQueue) {
+      res.status(400).json({
+        status: 400,
+        message: "User already in queue",
+      });
+      return;
+    }
 
     console.log(currentQueueCount);
 

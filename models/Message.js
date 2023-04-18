@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const ratingSchema = new mongoose.Schema({
+const messageSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -9,10 +9,10 @@ const ratingSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Organization",
   },
-  rating: { type: String, required: true },
+  message: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
 
-const Rating = mongoose.model("Rating", ratingSchema);
+const Message = mongoose.model("Message", messageSchema);
 
-export default Rating;
+export default Message;

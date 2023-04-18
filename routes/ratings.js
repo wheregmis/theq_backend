@@ -1,24 +1,49 @@
-const express = require('express');
-const Rating = require('./models/rating');
+import express from "express";
+import Rating from "../models/Ratings.js";
 
-const app = express();
+const ratingRouter = express.Router();
 
-app.post('/ratings', async (req, res) => {
-  const { userId, rating } = req.body;
+// Route to add a user to an organization's queue
+ratingRouter.post("/", async (req, res) => {
+  try {
+    const newQueueEntry = new Rating({
+      userId: req.body.userId,
+      organizationId: req.body.organizationId,
+      rating: req.body.rating,
+      createdAt: new Date(),
+    });
 
-  // Check if user has already rated the item
-  const existingRating = await Rating.findOne({ userId });
-  if (existingRating) {
-    return res.status(400).json({ error: 'User has already rated this item.' });
+    await newQueueEntry.save();
+
+    res.status(200).json({
+      status: 200,
+      data: newQueueEntry,
+      message: "Joined the queue successfully",
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 400,
+      message: err.message,
+    });
   }
-
-  // Save the new rating to the database
-  const newRating = new Rating({ userId, rating });
-  await newRating.save();
-
-  res.json({ message: 'Rating saved successfully.' });
 });
 
-app.listen(3000, () => {
-  console.log('Server listening on port 3000');
+// Route to get the queue for an organization
+ratingRouter.get("/:organizationId", async (req, res) => {
+  try {
+    const queues = await Rating.find({
+      organizationId: req.params.organizationId,
+    }).sort("createdAt");
+    res.status(200).json({
+      status: 200,
+      data: queues,
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 400,
+      message: err.message,
+    });
+  }
 });
+
+export default ratingRouter;
