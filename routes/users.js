@@ -23,6 +23,7 @@ userRouter.post("/login", async (req, res) => {
       });
     }
   } catch (err) {
+    alert("Error logging in");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -41,6 +42,7 @@ userRouter.post("/", async (req, res) => {
       data: user,
     });
   } catch (err) {
+    alert("Error creating user");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -57,6 +59,7 @@ userRouter.get("/", async (req, res) => {
       data: users,
     });
   } catch (err) {
+    alert("Error getting users");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -80,6 +83,7 @@ userRouter.get("/:userID", async (req, res) => {
       message: "No user found",
     });
   } catch (err) {
+    alert("Error getting user");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -103,6 +107,7 @@ userRouter.put("/:userID", async (req, res) => {
       message: "No user found",
     });
   } catch (err) {
+    alert("Error updating user");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -125,6 +130,7 @@ userRouter.delete("/:userID", async (req, res) => {
       });
     }
   } catch (err) {
+    alert("Error deleting user");
     res.status(400).json({
       status: 400,
       message: err.message,

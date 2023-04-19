@@ -43,6 +43,7 @@ queueRouter.post("/", async (req, res) => {
       message: "Joined the queue successfully",
     });
   } catch (err) {
+    alert("Error joining queue");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -61,6 +62,7 @@ queueRouter.get("/organization/:organizationId", async (req, res) => {
       data: queues,
     });
   } catch (err) {
+    alert("Error getting queue");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -94,6 +96,7 @@ queueRouter.put("/swap/:queueId1/:queueId2", async (req, res) => {
       message: "Queue positions swapped successfully",
     });
   } catch (err) {
+    alert("Error swapping queue positions");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -123,6 +126,7 @@ queueRouter.delete(
         });
       }
     } catch (err) {
+      alert("Error removing user from queue");
       res.status(400).json({
         status: 400,
         message: err.message,

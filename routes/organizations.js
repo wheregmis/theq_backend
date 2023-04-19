@@ -15,6 +15,7 @@ organizationRouter.post("/", async (req, res) => {
       data: organization,
     });
   } catch (err) {
+    alert("Error creating organization");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -50,6 +51,7 @@ organizationRouter.get("/", async (req, res) => {
       data: new_organizations,
     });
   } catch (err) {
+    alert("Error getting organizations");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -82,6 +84,7 @@ organizationRouter.get("/:organizationID", async (req, res) => {
       });
     }
   } catch (err) {
+    alert("Error getting organization");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -111,6 +114,7 @@ organizationRouter.put("/:organizationID", async (req, res) => {
       });
     }
   } catch (err) {
+    alert("Error updating organization");
     res.status(400).json({
       status: 400,
       message: err.message,
@@ -136,6 +140,7 @@ organizationRouter.delete("/:organizationID", async (req, res) => {
       });
     }
   } catch (err) {
+    alert("Error deleting organization");
     res.status(400).json({
       status: 400,
       message: err.message,
