@@ -68,13 +68,39 @@ queueRouter.get("/organization/:organizationId", async (req, res) => {
 });
 
 // Route to update a user's position in the queue (for swapping)
-queueRouter.put("/swap/:queueId1/:queueId2", async (req, res) => {
+queueRouter.put("/swap/:userId1/:userId2", async (req, res) => {
+  // try {
+  //   const queue1 = await Queue.findById(req.params.queueId1);
+  //   const queue2 = await Queue.findById(req.params.queueId2);
+  //   console.log(queue1.organization);
+  //   console.log(queue2.organization);
+  //   if (queue1?.organization.toString() != queue2?.organization.toString()) {
+  //     throw new Error("Invalid swap request");
+  //   }
+  //   // Swap the positions
+  //   const tempPosition = queue1.joinedAt;
+  //   queue1.joinedAt = queue2.joinedAt;
+  //   queue2.joinedAt = tempPosition;
+  //   await queue1.save();
+  //   await queue2.save();
+  //   res.status(200).json({
+  //     status: 200,
+  //     message: "Queue positions swapped successfully",
+  //   });
+  // } catch (err) {
+  //   res.status(400).json({
+  //     status: 400,
+  //     message: err.message,
+  //   });
+  // }
   try {
-    const queue1 = await Queue.findById(req.params.queueId1);
-    const queue2 = await Queue.findById(req.params.queueId2);
-
+    const queue1 = await Queue.findOne({
+      user: req.params.userId1,
+    });
+    const queue2 = await Queue.findOne({
+      user: req.params.userId2,
+    });
     console.log(queue1.organization);
-    console.log(queue2.organization);
 
     if (queue1?.organization.toString() != queue2?.organization.toString()) {
       throw new Error("Invalid swap request");
@@ -84,10 +110,8 @@ queueRouter.put("/swap/:queueId1/:queueId2", async (req, res) => {
     const tempPosition = queue1.joinedAt;
     queue1.joinedAt = queue2.joinedAt;
     queue2.joinedAt = tempPosition;
-
     await queue1.save();
     await queue2.save();
-
     res.status(200).json({
       status: 200,
       message: "Queue positions swapped successfully",

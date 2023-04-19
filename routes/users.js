@@ -1,5 +1,8 @@
 import express from "express";
 import User from "../models/User";
+import dotenv from "dotenv";
+import axios from "axios";
+dotenv.config();
 
 const userRouter = express.Router();
 
@@ -33,13 +36,39 @@ userRouter.post("/login", async (req, res) => {
 // Route to create a new user
 userRouter.post("/", async (req, res) => {
   try {
-    let user = new User(req.body);
-    user = await user.save();
+    const openAiResponse = await axios
+      .post(
+        "https://api.openai.com/v1/images/generations",
+        {
+          prompt: "Perfect Logo for tim hortons",
+          n: 2,
+          size: "1024x1024",
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + process.env.OPENAI_API_KEY,
+          },
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+      })
+      .then(async (openAiRes) => {
+        console.log(openAiRes.data);
+        let user = new User({
+          name: req.body.name,
+          email: req.body.email,
+          password: req.body.password,
+          type: "user",
+          image: openAiRes.data.data[0].url,
+        });
+        user = await user.save();
 
-    res.status(200).json({
-      status: 200,
-      data: user,
-    });
+        res.status(200).json({
+          status: 200,
+          data: user,
+        });
+      });
   } catch (err) {
     res.status(400).json({
       status: 400,

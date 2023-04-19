@@ -2,6 +2,9 @@ import express from "express";
 import Message from "../models/Message.js";
 import axios from "axios";
 import Rating from "../models/Ratings.js";
+// import and configure dotenv
+import dotenv from "dotenv";
+dotenv.config();
 
 const messageRouter = express.Router();
 
@@ -36,8 +39,7 @@ messageRouter.post("/", async (req, res) => {
         },
         {
           headers: {
-            Authorization:
-              "Bearer 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",
+            Authorization: "Bearer " + process.env.OPENAI_API_KEY,
           },
         }
       )
