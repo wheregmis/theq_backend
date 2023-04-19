@@ -10,8 +10,7 @@ export function connectDB() {
       }
     )
     .then(() => console.log("MongoDB connected"))
-    .catch((err) => alert("Error connecting to MongoDB", err)
-    , console.log(err));
+    .catch((err) =>  console.log(err));
 }
 
 export function getAllProjects() {
