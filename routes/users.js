@@ -40,9 +40,9 @@ userRouter.post("/", async (req, res) => {
       .post(
         "https://api.openai.com/v1/images/generations",
         {
-          prompt: "Perfect Logo for tim hortons",
-          n: 2,
-          size: "1024x1024",
+          prompt: req.body.aboutYou,
+          n: 1,
+          size: "512x512",
         },
         {
           headers: {
@@ -59,6 +59,8 @@ userRouter.post("/", async (req, res) => {
           name: req.body.name,
           email: req.body.email,
           password: req.body.password,
+          aliasName: req.body.aliasName,
+          aboutYou: req.body.aboutYou,
           type: "user",
           image: openAiRes.data.data[0].url,
         });
@@ -99,12 +101,12 @@ userRouter.get("/:userID", async (req, res) => {
       _id: req.params.userID,
     });
     if (user) {
-      res.status(200).json({
+      return res.status(200).json({
         status: 200,
         data: user,
       });
     }
-    res.status(400).json({
+    return res.status(400).json({
       status: 400,
       message: "No user found",
     });

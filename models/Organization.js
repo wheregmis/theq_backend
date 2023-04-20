@@ -8,10 +8,6 @@ const organizationSchema = new mongoose.Schema({
   website: String,
   lattitude: String,
   longitude: String,
-  totalCountersToServe: Number,
-  currentCountersServing: Number,
-  rating: Number,
-  qrCode: String,
   createdAt: {
     type: Date,
     default: Date.now,

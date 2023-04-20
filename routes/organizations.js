@@ -1,19 +1,64 @@
 import express, { json } from "express";
 import Organization from "../models/Organization.js";
 import Queue from "../models/Queue.js";
+import User from "../models/User.js";
+import axios from "axios";
 
 const organizationRouter = express.Router();
 
 // Route to create a new organization
 organizationRouter.post("/", async (req, res) => {
   try {
-    let organization = new Organization(req.body);
-    organization = await organization.save();
+    console.log("API GOT HIT");
+    const openAiResponse = await axios
+      .post(
+        "https://api.openai.com/v1/images/generations",
+        {
+          prompt: req.body.organizationDescription,
+          n: 1,
+          size: "512x512",
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + process.env.OPENAI_API_KEY,
+          },
+        }
+      )
+      .catch((err) => {
+        console.log(err);
+      })
+      .then(async (openAiRes) => {
+        console.log(openAiRes.data);
+        let organization = new Organization({
+          name: req.body.organizationName,
+          description: req.body.organizationDescription,
+          address: req.body.organizationAddress,
+          image: openAiRes.data.data[0].url,
+          website: req.body.organizationWebsite,
+          lattitude: req.body.organizationLatitude,
+          longitude: req.body.organizationLongitude,
+        });
 
-    res.status(200).json({
-      status: 200,
-      data: organization,
-    });
+        organization = await organization.save();
+
+        let user = new User({
+          name: req.body.organizationName,
+          aliasName: req.body.organizationName,
+          aboutYou: req.body.organizationDescription,
+          email: req.body.email,
+          password: req.body.password,
+          type: "organization",
+          organization: organization._id,
+          image: openAiRes.data.data[0].url,
+        });
+
+        user = await user.save();
+
+        res.status(200).json({
+          status: 200,
+          data: user,
+        });
+      });
   } catch (err) {
     res.status(400).json({
       status: 400,
@@ -65,7 +110,7 @@ organizationRouter.get("/:organizationID", async (req, res) => {
 
     const queues = await Queue.find({
       organization: req.params.organizationID,
-    });
+    }).sort("joinedAt");
 
     if (organization) {
       res.status(200).json({
